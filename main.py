@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import JSONResponse
 import requests
 import math
+import uvicorn
 
 app = FastAPI()
 
@@ -10,7 +11,7 @@ def geocode(address: str):
     geocode_url = 'https://geocode.search.hereapi.com/v1/geocode'
     params = {
         'q': address,
-        'apiKey': 'FKJdByW7d_QmFSdN8y8dF2f4x7pVNMHtgXb8O7Yr3So'
+        'apiKey': 'FKJdByW7d_QmFSdN8y8dF2f4x7pVNMHtgXb8O7Yr3So'  # Replace with your API key
     }
     response = requests.get(geocode_url, params=params)
     response.raise_for_status()
@@ -46,7 +47,7 @@ async def get_distance(
     # Calculate the Haversine distance
     distance = haversine(coords1[0], coords1[1], coords2[0], coords2[1])
 
-    # If the distance is greater than 10 km, return a response indicating the route exceeds the allowed distance
+    # If the distance is greater than 4.5 km, return a response indicating the route exceeds the allowed distance
     if distance > 4.5:
         raise HTTPException(status_code=500, detail="The distance is too far.")
 
@@ -57,7 +58,7 @@ async def get_distance(
         'origin': f"{coords1[0]},{coords1[1]}",
         'destination': f"{coords2[0]},{coords2[1]}",
         'return': 'summary',
-        'apiKey': 'FKJdByW7d_QmFSdN8y8dF2f4x7pVNMHtgXb8O7Yr3So'
+        'apiKey': 'FKJdByW7d_QmFSdN8y8dF2f4x7pVNMHtgXb8O7Yr3So'  # Replace with your API key
     }
 
     try:
@@ -74,3 +75,6 @@ async def get_distance(
         return JSONResponse(content=summary)
     except requests.exceptions.RequestException as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="127.0.0.1", port=8000, reload=True)
