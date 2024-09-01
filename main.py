@@ -79,4 +79,4 @@ async def get_distance(
 def home():
     return {"data": "Hello World"}
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="calcdistance-pjywg2u7.b4a.run", port=8000, reload=True)
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
